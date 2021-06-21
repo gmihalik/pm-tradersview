@@ -39,5 +39,31 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script
+      type="text/javascript"
+      src="https://s3.tradingview.com/tv.js"
+    ></script>
+    <script>
+      function loadTradeView(stock) {
+        new TradingView.widget({
+          symbol: stock,
+          interval: "D",
+          timezone: "Etc/UTC",
+          theme: "light",
+          style: "1",
+          locale: "en",
+          toolbar_bg: "#f1f3f6",
+          enable_publishing: false,
+          allow_symbol_change: true,
+          container_id: "tradingview_7089e"
+        });
+      }
+      window.loadChart = function (stock) {
+        loadTradeView(stock);
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      };
+      //window.attachEvent("onload", loadTradeView("SPY"));
+    </script>
   </body>
 </html>
