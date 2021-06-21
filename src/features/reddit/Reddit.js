@@ -16,6 +16,7 @@ class Reddit extends Component {
       comments: []
     };
   }
+
   componentDidMount() {
     this.scrapeSubreddit();
     //window["loadChart"]("SPY");
@@ -23,24 +24,20 @@ class Reddit extends Component {
   }
 
   async scrapeSubreddit() {
-    console.log(process.env);
-    console.log(process.env.REACT_APP_USER_AGENT);
     const r = new snoowrap({
       userAgent: process.env.REACT_APP_USER_AGENT,
       clientId: process.env.REACT_APP_CLIENT_ID,
       clientSecret: process.env.REACT_APP_CLIENT_SECRET,
       refreshToken: process.env.REACT_APP_REFRESH_TOKEN
     });
-
     const subreddit = await r.getSubreddit("PMTraders");
-    await subreddit.getTop({ time: "week", limit: 7 }).then((data) => {
+    await subreddit.getNew({ time: "week", limit: 7 }).then((data) => {
       console.log(data);
 
-      r.getSubmission(data[1].id)
+      r.getSubmission(data[0].id)
         .expandReplies({ limit: Infinity, depth: Infinity })
         .then((submissions) => {
           submissions.comments.forEach((comment) => {
-            //console.log(comment);
             this.process_comment_line(comment);
           });
         })
@@ -53,7 +50,6 @@ class Reddit extends Component {
   process_comment_line(comment) {
     let commentArr = this.state.comments;
     let author = comment.author.name;
-    console.log(author);
     let commentLines = comment.body.split("\n");
     commentLines.forEach((line, index) => {
       if (line.includes("STO") || line.includes("-1")) {
@@ -81,9 +77,9 @@ class Reddit extends Component {
       strike: "",
       tradeType: ""
     };
-    console.log(comment.split(" "));
+    //console.log(comment.split(" "));
     comment.split(" ").forEach((item) => {
-      console.log(item);
+      //console.log(item);
       if (item === "STO" || item === "BTC") {
         tradeObj.action = item;
       } else if (item === "-1" || item === "+1") {
@@ -167,4 +163,4 @@ class Reddit extends Component {
   }
 }
 
-export default Reddit; // Don’t forget to use export default!
+export default Reddit;
