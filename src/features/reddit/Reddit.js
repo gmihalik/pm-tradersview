@@ -23,11 +23,13 @@ class Reddit extends Component {
   }
 
   async scrapeSubreddit() {
+    console.log(process.env);
+    console.log(process.env.REACT_APP_USER_AGENT);
     const r = new snoowrap({
-      userAgent: process.env.userAgent,
-      clientId: process.env.clientId,
-      clientSecret: process.env.clientSecret,
-      refreshToken: process.env.refreshToken
+      userAgent: process.env.REACT_APP_USER_AGENT,
+      clientId: process.env.REACT_APP_CLIENT_ID,
+      clientSecret: process.env.REACT_APP_CLIENT_SECRET,
+      refreshToken: process.env.REACT_APP_REFRESH_TOKEN
     });
 
     const subreddit = await r.getSubreddit("PMTraders");
