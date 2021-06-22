@@ -1,7 +1,7 @@
 import snoowrap from "snoowrap";
 
 export function redditLogin() {
-  const r = new snoowrap({
+  return new snoowrap({
     userAgent: process.env.REACT_APP_USER_AGENT,
     clientId: process.env.REACT_APP_CLIENT_ID,
     clientSecret: process.env.REACT_APP_CLIENT_SECRET,
