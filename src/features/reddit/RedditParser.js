@@ -63,6 +63,7 @@ export async function process_comment_line(comment) {
 
 export async function process_trade_info(comments) {
   return await new Promise((resolve) => {
+    let commentsArr = [];
     for (let i = 0; i < comments.length; i++) {
       let tradeObj = {
         action: "",
@@ -76,37 +77,53 @@ export async function process_trade_info(comments) {
       for (let x = 0; x < commentItem.length; x++) {
         let item = commentItem[x];
         if (item === "STO" || item === "BTC") {
-          tradeObj.action = item;
+          //tradeObj.action = item;
+          tradeObj.action = tradeObj.action === "" ? item : tradeObj.action;
         } else if (item === "-1" || item === "+1") {
           tradeObj.action = item;
         } else if (/^(\d{1,2}\/\d{1,2})/.test(item)) {
           tradeObj.expiration = item;
-        } else if (/(\d+[^\/]\d+)/.test(item) || /(\d+[pcPC])/.test(item)) {
-          tradeObj.strike = item;
-          if (
-            item.toUpperCase().includes("P") ||
-            item.toUpperCase().includes("C")
-          ) {
-            tradeObj.tradeType = item
-              .substring(item.length - 1, item.length)
-              .toUpperCase();
+        } else if (/^([$0-9pcCP.]+)/.test(item)) {
+          if (item.length > 1) {
+            //tradeObj.strike = item;
+            if (tradeObj.strike === "") {
+              tradeObj.strike = item
+                .replace("P", "")
+                .replace("C", "")
+                .replace("p", "")
+                .replace("c", "")
+                .replace("(", "")
+                .replace(")", "");
+              if (
+                item.toUpperCase().includes("P") ||
+                item.toUpperCase().includes("C")
+              ) {
+                tradeObj.tradeType = item.toUpperCase().match(/[CPS]+/);
+              }
+            }
           }
         } else if (
-          /^([^0-9][A-Z]{1,4}[^a-z]\b)/.test(item) &&
+          /^[A-Z]{0,4}$/.test(item) &&
           item !== "STO" &&
-          item !== "IC"
+          item !== "IC" &&
+          item !== "EOY"
         ) {
-          tradeObj.underlying = item;
+          //tradeObj.underlying = item;
+          tradeObj.underlying =
+            tradeObj.underlying === "" ? item : tradeObj.underlying;
         } else if (/([pcPC])\b/g.test(item)) {
-          console.log("item " + item);
           var match = /([pcPC])\b/g.exec(item);
-          tradeObj.tradeType = match[0];
+          tradeObj.tradeType =
+            tradeObj.tradeType === "" ? match[0] : tradeObj.tradeType;
         }
       }
       comments[i].trade = tradeObj;
+      if (tradeObj.underlying !== "") {
+        commentsArr = commentsArr.concat(comments[i]);
+      }
       if (i === comments.length - 1) {
         //console.log(commentArr);
-        resolve(comments);
+        resolve(commentsArr);
       }
     }
   });
