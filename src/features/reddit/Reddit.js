@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Link from "@material-ui/core/Link";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -47,6 +46,8 @@ class Reddit extends Component {
       this.setState({ threads: data });
       this.setState({ post: data[0].id });
       this.loadThread(r, data[0].id);
+      console.log(data);
+      window.loadChart("SPY");
     });
     //window["loadChart"]("SPY");
     //window.helloComponent = this;

@@ -17,7 +17,7 @@ export default function Chart() {
               <Grid item xs={10} md={4} lg={3}>
                 <Trade />
               </Grid>
-              <Grid item xs={1} md={4} lg={0}></Grid>
+              <Grid item xs={1} md={4}></Grid>
             </Grid>
           </div>
         </div>

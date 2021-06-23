@@ -15,3 +15,8 @@
 .formText {
   margin: 15px;
 }
+
+.paper {
+  padding: 15px;
+  overflow: auto;
+}
