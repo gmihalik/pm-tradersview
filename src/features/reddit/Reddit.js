@@ -46,7 +46,6 @@ class Reddit extends Component {
       this.setState({ threads: data });
       this.setState({ post: data[0].id });
       this.loadThread(r, data[0].id);
-      console.log(data);
       window.loadChart("SPY");
     });
     //window["loadChart"]("SPY");

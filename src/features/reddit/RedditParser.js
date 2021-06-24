@@ -73,27 +73,31 @@ export async function process_trade_info(comments) {
         tradeType: ""
       };
       let commentItem = comments[i].comment.split(" ");
-
+      console.log(commentItem);
       for (let x = 0; x < commentItem.length; x++) {
         let item = commentItem[x];
+        console.log(item);
         if (item === "STO" || item === "BTC") {
           //tradeObj.action = item;
           tradeObj.action = tradeObj.action === "" ? item : tradeObj.action;
         } else if (item === "-1" || item === "+1") {
           tradeObj.action = item;
-        } else if (/^(\d{1,2}\/\d{1,2})/.test(item)) {
+        } else if (
+          /^(\d{1,2}\/\d{1,2})/.test(item) &&
+          item.split("/")[0] <= 12
+        ) {
           tradeObj.expiration = item;
-        } else if (/^([$0-9pcCP.]+)/.test(item)) {
+        } else if (/^([$0-9pcCP.]+)/.test(item) && /\d/.test(item)) {
           if (item.length > 1) {
             //tradeObj.strike = item;
             if (tradeObj.strike === "") {
               tradeObj.strike = item
-                .replace("P", "")
-                .replace("C", "")
-                .replace("p", "")
-                .replace("c", "")
-                .replace("(", "")
-                .replace(")", "");
+                .replaceAll("P", "")
+                .replaceAll("C", "")
+                .replaceAll("p", "")
+                .replaceAll("c", "")
+                .replaceAll("(", "")
+                .replaceAll(")", "");
               if (
                 item.toUpperCase().includes("P") ||
                 item.toUpperCase().includes("C")
@@ -109,6 +113,7 @@ export async function process_trade_info(comments) {
           item !== "EOY"
         ) {
           //tradeObj.underlying = item;
+          console.log(item);
           tradeObj.underlying =
             tradeObj.underlying === "" ? item : tradeObj.underlying;
         } else if (/([pcPC])\b/g.test(item)) {
@@ -118,6 +123,7 @@ export async function process_trade_info(comments) {
         }
       }
       comments[i].trade = tradeObj;
+      console.log(tradeObj);
       if (tradeObj.underlying !== "") {
         commentsArr = commentsArr.concat(comments[i]);
       }
